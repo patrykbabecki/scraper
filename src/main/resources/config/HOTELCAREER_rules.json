@@ -1,0 +1,117 @@
+[
+    {
+        "name": "simple inputs",
+        "tagName": "INPUT",
+        "labelXOffset": "10",
+        "labelYOffset": "-5",
+        "validationXOffset": "5",
+        "validationYOffset": "5",
+        "attributes": [
+            {
+                "name": "type",
+                "values": [
+                    "text",
+                    "email"
+                ],
+                "containAttributes": true,
+                "andAttribute": false
+            }
+        ],
+        "validationAttributes": [
+            {
+                "name": "style",
+                "values": [
+                    "rgb(204, 0, 0);"
+                ],
+                "containAttributes": true,
+                "andAttribute": false
+            }
+        ],
+        "isNavigation": false,
+        "isApplyButton": false
+    },
+    {
+        "name": "file inputs",
+        "tagName": "INPUT",
+        "labelXOffset": "0",
+        "labelYOffset": "-15",
+        "validationXOffset": "-50",
+        "validationYOffset": "10",
+        "attributes": [
+            {
+                "name": "type",
+                "values": [
+                    "file"
+                ],
+                "containAttributes": true,
+                "andAttribute": false
+            }
+        ],
+        "validationAttributes": [],
+        "isNavigation": false,
+        "isApplyButton": false
+    },
+    {
+        "name": "apply button",
+        "tagName": "A",
+        "labelXOffset": "5",
+        "labelYOffset": "5",
+        "validationXOffset": "-50",
+        "validationYOffset": "10",
+        "attributes": [
+            {
+                "name": "js_id",
+                "values": [
+                    "btn_send_bew"
+                ],
+                "containAttributes": true,
+                "andAttribute": false
+            }
+        ],
+        "validationAttributes": [],
+        "isNavigation": true,
+        "isApplyButton": true
+    },
+    {
+        "name": "select ",
+        "tagName": "SELECT",
+        "labelXOffset": "10",
+        "labelYOffset": "-5",
+        "validationXOffset": "-50",
+        "validationYOffset": "10",
+        "attributes": [
+            {
+                "name": "js_class",
+                "values": [
+                    "salutation"
+                ],
+                "containAttributes": true,
+                "andAttribute": false
+            }
+        ],
+        "validationAttributes": [],
+        "isNavigation": false,
+        "isApplyButton": false
+    },
+    {
+        "name": "text area",
+        "tagName": "TEXTAREA",
+        "labelXOffset": "10",
+        "labelYOffset": "-15",
+        "validationXOffset": "-50",
+        "validationYOffset": "10",
+        "attributes": [
+            {
+                "name": "js_class",
+                "values": [
+                    "personal_message"
+                ],
+                "containAttributes": true,
+                "andAttribute": false
+            }
+        ],
+        "validationAttributes": [],
+        "isNavigation": false,
+        "isApplyButton": false
+    }
+]

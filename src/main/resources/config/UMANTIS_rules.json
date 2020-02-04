@@ -1,0 +1,26 @@
+[
+    {
+        "name": "inputs",
+        "tagName": "INPUT",
+        "labelXOffset": "-30",
+        "labelYOffset": "5",
+        "validationXOffset": "0",
+        "validationYOffset": "0",
+        "attributes": [],
+        "validationAttributes": [],
+        "isNavigation": false,
+        "isApplyButton": false
+    },
+    {
+        "name": "submit",
+        "tagName": "BUTTON",
+        "labelXOffset": "5",
+        "labelYOffset": "5",
+        "validationXOffset": "-50",
+        "validationYOffset": "10",
+        "attributes": [],
+        "validationAttributes": [],
+        "isNavigation": false,
+        "isApplyButton": true
+    }
+]

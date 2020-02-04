@@ -1,0 +1,56 @@
+[
+    {
+        "name": "default",
+        "tagName": "INPUT",
+        "labelXOffset": "0",
+        "labelYOffset": "-10",
+        "validationXOffset": "5",
+        "validationYOffset": "5",
+        "attributes": [],
+        "validationAttributes": [],
+        "isNavigation": false,
+        "isApplyButton": false
+    },
+    {
+        "name": "submit",
+        "tagName": "A",
+        "labelXOffset": "5",
+        "labelYOffset": "5",
+        "validationXOffset": "5",
+        "validationYOffset": "5",
+        "attributes": [
+            {
+                "name": "href",
+                "values": [
+                    "#"
+                ],
+                "containAttributes": true,
+                "andAttribute": false
+            }
+        ],
+        "validationAttributes": [],
+        "isNavigation": false,
+        "isApplyButton": true
+    },
+    {
+        "name": "span",
+        "tagName": "SPAN",
+        "labelXOffset": "0",
+        "labelYOffset": "-10",
+        "validationXOffset": "5",
+        "validationYOffset": "5",
+        "attributes": [
+            {
+                "name": "role",
+                "values": [
+                    "combobox"
+                ],
+                "containAttributes": true,
+                "andAttribute": false
+            }
+        ],
+        "validationAttributes": [],
+        "isNavigation": false,
+        "isApplyButton": false
+    }
+]

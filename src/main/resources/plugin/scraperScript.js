@@ -273,7 +273,7 @@ function preffilScrapedElements(scrapedElements) {
         let labelText = scrapedElem.label !== null ? scrapedElem.label.text : null;
         if(labelText !== null) {
             for(let [k, v] of Object.entries(preffilMap)) {
-                if(v.includes(labelText.toLowerCase())) {
+                if(v.includes(cleanLabelText(labelText))) {
                     scrapedElem.prefill = k;
                 }
             }
@@ -283,13 +283,22 @@ function preffilScrapedElements(scrapedElements) {
 
 function getPreffilMap() {
     let map = [];
-    map['firstName'] = ['imię','first name', 'name', 'der name'];
-    map['lastName'] = ['nazwisko', 'last name', 'der Familienname'];
-    map['city'] = ['miasto', 'city', 'Stadt'];
+    map['firstName'] = ['imię','first name', 'name', 'der name', 'vorname'];
+    map['lastName'] = ['nazwisko', 'last name', 'der familienname', 'nachname'];
+    map['city'] = ['miasto', 'city', 'stadt', 'city name'];
     map['cv'] = ['cv'];
-    map['phone'] = ['telefon', 'phone', 'mobile', 'telephone', 'telephon', 'phone number'];
-    map['email'] = ['email'];
+    map['phone'] = ['telefon', 'phone', 'mobile', 'telephone', 'telephon', 'phone number', 'telefonnummer'];
+    map['email'] = ['email', 'e-mail-adresse/login'];
+    map['title'] = ['titel', 'title', 'tytół'];
+    map['birth'] = ['geburtsdatum', 'birthday', 'date of birth'];
     return map;
+}
+
+function cleanLabelText(labelText) {
+    let label = labelText.toLowerCase();
+    label = label.split("*").join("");
+    label = label.split(":").join("");
+    return label;
 }
 
 function wait(ms){
