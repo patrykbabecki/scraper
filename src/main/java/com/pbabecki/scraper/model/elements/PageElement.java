@@ -1,26 +1,27 @@
-package com.pbabecki.scraper.model.page;
+package com.pbabecki.scraper.model.elements;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Map;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PageElement {
 
     private String xPath;
     private String parentXPath;
     private String tagName;
-    private PageElementAttributes attributes;
     private String text;
     private String innerText;
     private PageElementPosition position;
+    private List<PageElementAttributes> attributes;
 
 }

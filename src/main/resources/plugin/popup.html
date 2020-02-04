@@ -22,7 +22,15 @@ label {
     <button id="generate_script_button">Generate Script</button><br>
     Load rule : <input type="file" id="load_rule_file" name="Load rules"><br>
     <button id="add_rule_button">Add rule</button>
-    <button id="add_widget_button">Add widget</button>
+    <button id="add_widget_button">Add widget</button><br>
+
+    <select id="send_document_elements">
+        <option>BLANK_FORM</option>
+        <option>INVALID_FORM</option>
+        <option>VALID_FORM</option>
+    </select>
+    <button id="send_form_values">Send</button>
+    <button id="generate_rules">Generate</button>
 
 
 
@@ -37,7 +45,7 @@ label {
         <ul id="attribute_values" class="attribute_values"/>
     </div>
 
-    <div class="attruibute_rules_div" id="attribute_value_div">
+    <div class="attruibute_rules_div" id="attribute_value_div" hidden>
         <div id="attribute_rule_element" class="attribute_rule_element">
             <label><b>Attribute Name : </b></label>
             <input type="text" id="attribute_name" class="attribute_rule_name"/>

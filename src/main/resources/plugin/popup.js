@@ -6,6 +6,45 @@ let addRuleButton = document.getElementById('add_rule_button');
 let loadRuleInput = document.getElementById('load_rule_file');
 let atsNameInput = document.getElementById('ats_name');
 
+let sendToBackendButton = document.getElementById('send_form_values');
+let generateRules = document.getElementById('generate_rules');
+let formOption = document.getElementById('send_document_elements');
+
+sendToBackendButton.onclick = function(elem) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+           chrome.tabs.executeScript(
+              tabs[0].id,
+              {file: 'prepareParsedElements.js'},
+              function(result) {
+                       let formOpt = formOption.options[formOption.selectedIndex].text;
+                       let atsNameValue = atsNameInput.value;
+                       let postObject = {
+                            atsName: atsNameValue,
+                            option: formOpt,
+                            elements: result[0]
+                       };
+
+                       let xhr = new XMLHttpRequest();
+                       let url = "http://127.0.0.1:8080/page/elements";
+                       xhr.open("POST", url, true);
+                       xhr.setRequestHeader("Content-Type", "application/json");
+//                       xhr.onreadystatechange = function () {
+//                           if (xhr.readyState === 4 && xhr.status === 200) {
+//                               var json = JSON.parse(xhr.responseText);
+//                               console.log(json.email + ", " + json.password);
+//                           }
+//                       };
+                       let data = JSON.stringify(postObject);
+                       xhr.send(data);
+
+               })});
+
+}
+
+generateRules.onclick = function(elem) {
+    console.log("generate rules");
+}
+
 showElementsCheckbox.onclick = function(element) {
     console.log('show elements');
 }
