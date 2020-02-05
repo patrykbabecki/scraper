@@ -1,0 +1,47 @@
+[
+    {
+        "name": "default",
+        "tagName": "INPUT",
+        "labelXOffset": "-50",
+        "labelYOffset": "5",
+        "validationXOffset": "-50",
+        "validationYOffset": "10",
+        "attributes": [],
+        "validationAttributes": [],
+        "isNavigation": false,
+        "isApplyButton": false
+    },
+    {
+        "name": "select",
+        "tagName": "INPUT",
+        "labelXOffset": "-60",
+        "labelYOffset": "5",
+        "validationXOffset": "-50",
+        "validationYOffset": "10",
+        "attributes": [],
+        "validationAttributes": [],
+        "isNavigation": false,
+        "isApplyButton": false
+    },
+    {
+        "name": "next button",
+        "tagName": "BUTTON",
+        "labelXOffset": "5",
+        "labelYOffset": "5",
+        "validationXOffset": "-50",
+        "validationYOffset": "10",
+        "attributes": [
+            {
+                "name": "class",
+                "values": [
+                    "next"
+                ],
+                "containAttributes": true,
+                "andAttribute": false
+            }
+        ],
+        "validationAttributes": [],
+        "isNavigation": true,
+        "isApplyButton": false
+    }
+]

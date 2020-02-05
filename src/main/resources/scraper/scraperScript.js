@@ -2,7 +2,7 @@ function scrapeElem(elem) {
       let rules = getRules();
       let elemRule = findRuleByTagNameAndAttribute(rules, elem);
       if(elemRule === null || elemRule === undefined) {
-            continue;
+            return null;
       }
       let element = scrollToElementByXPath(elem.xPath);
       let scrolledElement = prepareParsedElement(element);
@@ -20,13 +20,14 @@ function scrapeElem(elem) {
                 isValid: isElemValid,
                 rule: elemRule,
                 isNavigation: rule.isNavigation,
-                isApplyButton: rule.isApplyButton
+                isApplyButton: rule.isApplyButton,
+                prefill: getPreffilScrapedElement(labelElement)
        };
     return scrapedElement;
 }
 
 function findRuleByTagNameAndAttribute(rules, element) {
-     for(j = 0; j < rules.length; j++) {
+     for(let j = 0; j < rules.length; j++) {
         let rule = rules[j];
         if(rule.tagName.toUpperCase() === element.tagName.toUpperCase()) {
             if (rule.attributes.length === 0) {
@@ -42,7 +43,7 @@ function findRuleByTagNameAndAttribute(rules, element) {
 }
 
 function isElemContainsAttributes(element, attributes) {
-            for(a = 0; a < element.attributes.length; a++) {
+            for(let a = 0; a < element.attributes.length; a++) {
                 let attributeName = element.attributes[a].name;
                 let attributeValue = element.attributes[a].value;
                 if(isRuleContainsAttribute(attributes, attributeName, attributeValue)) {
@@ -54,9 +55,9 @@ function isElemContainsAttributes(element, attributes) {
 }
 
 function isRuleContainsAttribute(attributes, name, value) {
-    for(h = 0; h < attributes.length; h++) {
+    for(let h = 0; h < attributes.length; h++) {
         if(attributes[h].name === name) {
-            for(y = 0; y < attributes[h].values.length; y++) {
+            for(let y = 0; y < attributes[h].values.length; y++) {
                 let ruleAttributeValue = attributes[h].values[y];
                 if(value !== undefined && value !== null && value.includes(ruleAttributeValue)) {
                     return true;
@@ -89,8 +90,8 @@ function getElementXPath(elt) {
      let path = "";
      for (; elt && elt.nodeType == 1; elt = elt.parentNode)
      {
-   	    idx = getElementIdx(elt);
-	    xname = elt.tagName;
+   	    let idx = getElementIdx(elt);
+	    let xname = elt.tagName;
 	    if (idx > 1) xname += "[" + idx + "]";
 	    path = "/" + xname + path;
      }
@@ -98,8 +99,8 @@ function getElementXPath(elt) {
 }
 
 function getElementIdx(elt) {
-    var count = 1;
-    for (var sib = elt.previousSibling; sib ; sib = sib.previousSibling)
+    let count = 1;
+    for (let sib = elt.previousSibling; sib ; sib = sib.previousSibling)
     {
         if(sib.nodeType == 1 && sib.tagName == elt.tagName)	count++
     }
@@ -146,25 +147,24 @@ function scrollToElementByXPath(xPath) {
     return element;
 }
 
-function preffilScrapedElements(scrapedElements) {
+function getPreffilScrapedElement(labelElem) {
     let preffilMap = getPreffilMap();
-    for(i = 0 ; i < scrapedElements.length ; i++) {
-        let scrapedElem = scrapedElements[i];
-        let labelText = scrapedElem.label !== null ? scrapedElem.label.text : null;
-        if(labelText !== null) {
-            for(let [k, v] of Object.entries(preffilMap)) {
-                if(v.includes(cleanLabelText(labelText))) {
-                    scrapedElem.prefill = k;
-                }
+    let labelText = labelElem !== null ? labelElem.text : null;
+    if(labelText !== null) {
+         for(let [k, v] of Object.entries(preffilMap)) {
+            if(v.includes(cleanLabelText(labelText))) {
+                return k;
             }
-        }
+         }
     }
+
 }
 
 function cleanLabelText(labelText) {
     let label = labelText.toLowerCase();
     label = label.split("*").join("");
     label = label.split(":").join("");
+    label = label.trim();
     return label;
 }
 
@@ -175,7 +175,7 @@ function getPreffilMap() {
     map['city'] = ['miasto', 'city', 'stadt', 'city name'];
     map['cv'] = ['cv'];
     map['phone'] = ['telefon', 'phone', 'mobile', 'telephone', 'telephon', 'phone number', 'telefonnummer'];
-    map['email'] = ['email', 'e-mail-adresse/login'];
+    map['email'] = ['email', 'e-mail-adresse/login', 'e-mail'];
     map['title'] = ['titel', 'title', 'tytół'];
     map['birth'] = ['geburtsdatum', 'birthday', 'date of birth'];
     return map;
