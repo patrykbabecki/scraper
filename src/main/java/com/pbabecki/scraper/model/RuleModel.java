@@ -1,21 +1,20 @@
-package com.pbabecki.scraper.model.elements;
+package com.pbabecki.scraper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.pbabecki.scraper.model.rule.RuleElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class PageElementPosition {
+public class RuleModel {
 
-    private double x;
-    private double y;
-    private double width;
-    private double height;
+    private List<RuleElement> rules;
 
 }

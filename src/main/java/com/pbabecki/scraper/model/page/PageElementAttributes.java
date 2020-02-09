@@ -1,8 +1,6 @@
-package com.pbabecki.scraper.model;
+package com.pbabecki.scraper.model.page;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.pbabecki.scraper.model.page.PageElement;
-import com.pbabecki.scraper.model.page.PageOptionEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,10 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PageModel {
+public class PageElementAttributes {
 
-    private String atsName;
-    private PageOptionEnum option;
-    private List<PageElement> elements;
+    private String name;
+    private Object value;
 
 }

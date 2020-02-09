@@ -1,6 +1,5 @@
-package com.pbabecki.scraper.model.elements;
+package com.pbabecki.scraper.model.rule;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +11,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class PageElementAttributes {
+public class RuleElementAttribute {
 
     private String name;
-    private Object value;
+    private List<String> values;
 
 }

@@ -60,7 +60,7 @@ function prepareParsedElement(elem) {
         parentXPath: parentXpathValue,
         tagName: elem.tagName,
         attributes: elemAttributes,
-        text: elem.text,
+        text: elem.textContent,
         innerText: elem.innerText,
         position: elemPosition
     };
