@@ -168,6 +168,9 @@ function drawRule(elem, rule) {
 }
 
 function drawAttributes(attributes, attributeClassName, elem) {
+        if(attributes === null || attributes === undefined) {
+            return;
+        }
         for(j = 0; j < attributes.length; j++) {
             let ruleAttributes = attributes[j];
             let ruleAttributesElem = document.getElementById('attribute_name_value');

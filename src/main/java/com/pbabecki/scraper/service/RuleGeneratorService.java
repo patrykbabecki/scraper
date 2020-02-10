@@ -2,8 +2,10 @@ package com.pbabecki.scraper.service;
 
 import com.pbabecki.scraper.model.RuleModel;
 import com.pbabecki.scraper.model.page.PageElement;
+import com.pbabecki.scraper.model.page.PageElementAttributes;
 import com.pbabecki.scraper.model.page.PageElementPosition;
 import com.pbabecki.scraper.model.rule.RuleElement;
+import com.pbabecki.scraper.model.rule.RuleElementAttribute;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,78 @@ public class RuleGeneratorService {
             ruleElement.setName(i + " Rule : " + ruleElement.getTagName());
         }
         return ruleElements;
+    }
+
+    public Optional<RuleElement> generateApplyRule(List<PageElement> pageElements, PageElement applyPageElement) {
+        pageElements.remove(applyPageElement);
+        List<PageElement> elementsWithTheSameTagName = pageElements.stream()
+                .filter(elem -> elem.getTagName().equals(applyPageElement.getTagName()))
+                .collect(Collectors.toList());
+
+        Map<String, String> applyElementAttributeMap = applyPageElement.getAttributes().stream()
+                .collect(Collectors.toMap(PageElementAttributes::getName, PageElementAttributes::getValue));
+        Map<String, Set<String>> pageElementAttributes = getAttributesMapOfPageElements(elementsWithTheSameTagName);
+
+        Map<String, String> applyRuleAttributesMap = findDifference(pageElementAttributes, applyElementAttributeMap);
+        if(applyRuleAttributesMap.isEmpty() && !elementsWithTheSameTagName.isEmpty()) {
+            log.error("Cant find unique attributes for apply element : " + applyPageElement);
+            return Optional.empty();
+        } else {
+            RuleElement applyRuleElement = prepareApplyRuleElement(applyPageElement, applyRuleAttributesMap);
+            return Optional.of(applyRuleElement);
+        }
+    }
+
+    private RuleElement prepareApplyRuleElement(PageElement applyPageElement, Map<String, String> applyUniqueAttributes) {
+        List<RuleElementAttribute> ruleElementAttributes = new ArrayList<>();
+        applyUniqueAttributes.keySet().forEach(key ->
+                ruleElementAttributes.add(RuleElementAttribute.builder()
+                        .name(key)
+                        .values(Collections.singletonList(applyUniqueAttributes.get(key)))
+                        .build()));
+        return RuleElement.builder()
+                .name("Apply Rule : " + applyPageElement.getTagName())
+                .tagName(applyPageElement.getTagName())
+                .attributes(ruleElementAttributes)
+                .isApplyButton(true)
+                .labelXOffset("5")
+                .labelYOffset("5")
+                .validationXOffset("5")
+                .validationYOffset("5")
+                .build();
+    }
+
+    private Map<String, String> findDifference(Map<String, Set<String>> elementsAttributes, Map<String, String> applyAttributes) {
+        Map<String, String> difference = new HashMap<>();
+        applyAttributes.keySet().forEach(applyKey -> {
+            String  applyValue = applyAttributes.get(applyKey);
+            if(!elementsAttributes.containsKey(applyKey)) {
+                difference.put(applyKey, applyValue);
+            } else {
+                Set<String> elementAttributeValues = elementsAttributes.get(applyKey);
+                Set<String> sameAttributesValues = elementAttributeValues.stream()
+                        .filter(elemValue -> !elemValue.equals(applyValue))
+                        .collect(Collectors.toSet());
+                if(elementAttributeValues.size() == sameAttributesValues.size()) {
+                    difference.put(applyKey, applyValue);
+                }
+            }
+        });
+        return difference;
+    }
+
+    private Map<String, Set<String>> getAttributesMapOfPageElements(List<PageElement> pageElements) {
+        Map<String, Set<String>> attributes = new HashMap<>();
+        pageElements.stream().map(PageElement::getAttributes).forEach(elemAttributes -> elemAttributes.forEach(attribute -> {
+           if(attributes.containsKey(attribute.getName())) {
+               attributes.get(attribute.getName()).add(attribute.getValue());
+           } else {
+               Set<String> valueSet = new HashSet<>();
+               valueSet.add(attribute.getValue());
+               attributes.put(attribute.getName(), valueSet);
+           }
+        }));
+        return attributes;
     }
 
     private List<RuleElement> prepareRuleForTheSameTagNameElements(Map<PageElement, Map<DirectionEnum, Set<PageElement>>> pageElementMapMap, String tagName) {

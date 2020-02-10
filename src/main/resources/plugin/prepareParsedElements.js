@@ -48,9 +48,10 @@ function prepareParsedElement(elem) {
     };
     let elemAttributes = [];
     for(k = 0; k < elem.attributes.length; k++) {
+        let valueString = String(elem.attributes[k].value);
         let elemAttribute = {
             name: elem.attributes[k].name,
-            value: elem.attributes[k].value
+            value: valueString
         }
         elemAttributes.push(elemAttribute);
     }

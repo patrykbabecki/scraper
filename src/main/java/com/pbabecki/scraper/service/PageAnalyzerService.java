@@ -44,6 +44,8 @@ public class PageAnalyzerService {
     private final List<String> LABEL_TAG_NAMES = Arrays.asList(LABEL_TAG_NAME, H3_TAG_NAME);
     private final List<String> APPLY_TAG_NAMES = Arrays.asList(BUTTON_TAG_NAME, A_TAG_NAME);
 
+    private final List<String> APPLY_BUTTON_TEXTS = Arrays.asList("weiter", "aplikuj online", "aplikuj", "submit", "submit final application", "application", "send", "senden", "bewerbung senden");
+
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final PositionService positionService;
     private final RuleGeneratorService ruleGeneratorService;
@@ -60,12 +62,31 @@ public class PageAnalyzerService {
                 .collect(Collectors.toList());
         Map<PageElementPosition, PageElement> pageElementMap = transformPageElementsToPositionElementMap(pageElements);
 
-        List<RuleElement> labelRuleElements = analyzeInputElements(pageElementMap, pageElements);
+        List<RuleElement> ruleElements = analyzeInputElements(pageElementMap, pageElements);
 
+        analyzeApplyElements(pageElementMap, pageElements).ifPresent(ruleElements::add);
+
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(ruleElements);
+        log.info(json);
 
         return RuleModel.builder()
-                .rules(labelRuleElements)
+                .rules(ruleElements)
                 .build();
+    }
+
+    private Optional<RuleElement> analyzeApplyElements(Map<PageElementPosition, PageElement> pageElementMap, List<PageElement> pageElements) {
+        List<PageElement> applyElements = filterPageElements(pageElements,
+                pageElem -> APPLY_TAG_NAMES.contains(pageElem.getTagName()) &&
+                        StringUtils.isNotBlank(pageElem.getText()) &&
+                        APPLY_BUTTON_TEXTS.contains(pageElem.getText().trim().toLowerCase())
+        );
+        if(applyElements.size() != 1) {
+            log.error("Cant recognize apply button in : " + applyElements);
+            return Optional.empty();
+        }
+        PageElement applyPageElem = applyElements.get(0);
+        Optional<RuleElement> ruleElement = ruleGeneratorService.generateApplyRule(pageElements, applyPageElem);
+        return ruleElement;
     }
 
     @SneakyThrows

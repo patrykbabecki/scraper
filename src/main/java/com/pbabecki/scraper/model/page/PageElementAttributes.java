@@ -16,6 +16,6 @@ import java.util.List;
 public class PageElementAttributes {
 
     private String name;
-    private Object value;
+    private String value;
 
 }
