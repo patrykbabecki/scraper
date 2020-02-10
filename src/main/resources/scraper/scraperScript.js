@@ -71,6 +71,8 @@ function isRuleContainsAttribute(attributes, name, value) {
 function findElement(elementPosition, xOffset, yOffset, elemType) {
     let x = parseInt(elementPosition.x, 10) + parseInt(xOffset, 10);
     let y = parseInt(elementPosition.y, 10) + parseInt(yOffset, 10);
+    console.log(x);
+    console.log(y);
     let elem = document.elementFromPoint(x, y);
     if(elem !== undefined && elem !== null) {
         elem.setAttribute('pos', 'x = ' + x + ' y = ' + y);

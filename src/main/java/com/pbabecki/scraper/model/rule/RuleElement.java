@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,9 +18,11 @@ public class RuleElement {
     private String tagName;
     private String labelXOffset;
     private String labelYOffset;
+    private String validationXOffset = "0";
+    private String validationYOffset = "0";
     private boolean isNavigation;
     private boolean isApplyButton;
-    private List<RuleElementAttribute> attributes;
-    private List<RuleElementAttribute> validationAttributes;
+    private List<RuleElementAttribute> attributes = new ArrayList<>();
+    private List<RuleElementAttribute> validationAttributes = new ArrayList<>();
 
 }

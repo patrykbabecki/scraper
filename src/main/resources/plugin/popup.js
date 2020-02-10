@@ -28,17 +28,16 @@ sendToBackendButton.onclick = function(elem) {
                        let url = "http://127.0.0.1:8080/page/elements";
                        xhr.open("POST", url, true);
                        xhr.setRequestHeader("Content-Type", "application/json");
-//                       xhr.onreadystatechange = function () {
-//                           if (xhr.readyState === 4 && xhr.status === 200) {
-//                               var json = JSON.parse(xhr.responseText);
-//                               console.log(json.email + ", " + json.password);
-//                           }
-//                       };
+                       xhr.onreadystatechange = function () {
+                           if (xhr.readyState === 4 && xhr.status === 200) {
+                               let json = JSON.parse(xhr.responseText);
+                               console.log(json.rules);
+                               drawRules(json.rules);
+                           }
+                       };
                        let data = JSON.stringify(postObject);
                        xhr.send(data);
-
                })});
-
 }
 
 generateRules.onclick = function(elem) {

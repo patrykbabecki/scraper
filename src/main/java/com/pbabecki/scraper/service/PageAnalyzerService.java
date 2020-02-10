@@ -1,14 +1,13 @@
 package com.pbabecki.scraper.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Preconditions;
 import com.pbabecki.scraper.model.PageModel;
 import com.pbabecki.scraper.model.RuleModel;
 import com.pbabecki.scraper.model.page.PageElement;
 import com.pbabecki.scraper.model.page.PageElementAttributes;
 import com.pbabecki.scraper.model.page.PageElementPosition;
 import com.pbabecki.scraper.model.page.PageOptionEnum;
-import javafx.geometry.Rectangle2D;
+import com.pbabecki.scraper.model.rule.RuleElement;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +37,12 @@ public class PageAnalyzerService {
     private static final String LABEL_TAG_NAME = "LABEL";
     private static final String H3_TAG_NAME = "H3";
 
+    private static final String BUTTON_TAG_NAME = "BUTTON";
+    private static final String A_TAG_NAME = "A";
+
     private final List<String> INPUT_TAG_NAMES = Arrays.asList(INPUT_TAG_NAME, SELECT_TAG_NAME, TEXT_AREA_TAG_NAME);
     private final List<String> LABEL_TAG_NAMES = Arrays.asList(LABEL_TAG_NAME, H3_TAG_NAME);
+    private final List<String> APPLY_TAG_NAMES = Arrays.asList(BUTTON_TAG_NAME, A_TAG_NAME);
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final PositionService positionService;
@@ -56,6 +59,17 @@ public class PageAnalyzerService {
                 .filter(elem -> elem.getPosition().getHeight() != 0 && elem.getPosition().getWidth() != 0)
                 .collect(Collectors.toList());
         Map<PageElementPosition, PageElement> pageElementMap = transformPageElementsToPositionElementMap(pageElements);
+
+        List<RuleElement> labelRuleElements = analyzeInputElements(pageElementMap, pageElements);
+
+
+        return RuleModel.builder()
+                .rules(labelRuleElements)
+                .build();
+    }
+
+    @SneakyThrows
+    private List<RuleElement> analyzeInputElements(Map<PageElementPosition, PageElement> pageElementMap, List<PageElement> pageElements) {
         List<PageElement> inputElements = filterPageElements(pageElements, pageElem -> INPUT_TAG_NAMES.contains(pageElem.getTagName()));
 
         Set<DirectionEnum> labelDirections = new HashSet<>(Arrays.asList(UP, LEFT));
@@ -63,13 +77,10 @@ public class PageAnalyzerService {
                 .collect(Collectors
                         .toMap(Function.identity(),
                                 elem -> findNearestElements(pageElementMap, elem, labelDirections, findLabelPrecondition(), MAX_PIXEL_DISTANCE_BWETWEEN_ELEM_AND_LABEL)));
-
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(nearestLabelElements);
         log.info(json);
-        RuleModel ruleModel = ruleGeneratorService.generateRule(nearestLabelElements);
-        String ruleJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(ruleModel);
-        log.info(ruleJson);
-        return ruleModel;
+        List<RuleElement> labelRuleElements = ruleGeneratorService.generateLabelRules(nearestLabelElements);
+        return labelRuleElements;
     }
 
     private Map<DirectionEnum, Set<PageElement>> findNearestElements(Map<PageElementPosition, PageElement> pageElementMap, PageElement pageElement, Set<DirectionEnum> directions, Predicate<PageElement> filter, double maxDistance) {

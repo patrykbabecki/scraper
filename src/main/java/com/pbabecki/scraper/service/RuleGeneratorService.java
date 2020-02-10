@@ -19,7 +19,7 @@ public class RuleGeneratorService {
 
     private static final int PIXEL_TOLLERANCE = 5;
 
-    public RuleModel generateRule(Map<PageElement, Map<DirectionEnum, Set<PageElement>>> pageElementMapMap) {
+    public List<RuleElement> generateLabelRules(Map<PageElement, Map<DirectionEnum, Set<PageElement>>> pageElementMapMap) {
         Set<String> pageElementTagNames = pageElementMapMap.keySet().stream().map(PageElement::getTagName).collect(Collectors.toSet());
         List<RuleElement> ruleElements = new ArrayList<>();
         pageElementTagNames.forEach(tagName -> {
@@ -29,9 +29,11 @@ public class RuleGeneratorService {
             List<RuleElement> generatedRuleElements = prepareRuleForTheSameTagNameElements(tagNamePageElementMap, tagName);
             ruleElements.addAll(generatedRuleElements);
         });
-        return RuleModel.builder()
-                .rules(ruleElements)
-                .build();
+        for(int i = 0; i < ruleElements.size() ; i++) {
+            RuleElement ruleElement = ruleElements.get(i);
+            ruleElement.setName(i + " Rule : " + ruleElement.getTagName());
+        }
+        return ruleElements;
     }
 
     private List<RuleElement> prepareRuleForTheSameTagNameElements(Map<PageElement, Map<DirectionEnum, Set<PageElement>>> pageElementMapMap, String tagName) {
@@ -45,20 +47,19 @@ public class RuleGeneratorService {
         return Arrays.asList(ruleElement);
     }
 
-    private RuleElement prepareRuleElement(DirectionEnum direction, Double offsetValue, String tagName) {
+    private RuleElement prepareRuleElement(DirectionEnum direction, double offsetValue, String tagName) {
         RuleElement ruleElement = new RuleElement();
         ruleElement.setTagName(tagName);
-        Double offset = direction.getDirectionSign() * offsetValue;
         switch (direction) {
             case UP:
             case DOWN:
                 ruleElement.setLabelXOffset("5");
-                ruleElement.setLabelYOffset(Double.toString(offset));
+                ruleElement.setLabelYOffset(Integer.toString((int)offsetValue));
                 break;
             case LEFT:
             case RIGHT:
                 ruleElement.setLabelYOffset("5");
-                ruleElement.setLabelYOffset(Double.toString(offset));
+                ruleElement.setLabelXOffset(Integer.toString((int)offsetValue));
                 break;
                 default:
                     throw new IllegalStateException("Direction not supported : " + direction);
@@ -71,11 +72,11 @@ public class RuleGeneratorService {
         switch (direction) {
             case UP:
             case DOWN:
-                offset = calculateOffset(pageElement, nextElements, PageElementPosition::getMinX);
+                offset = calculateOffset(pageElement, nextElements, PageElementPosition::getMinY);
                 break;
             case RIGHT:
             case LEFT:
-                offset = calculateOffset(pageElement, nextElements, PageElementPosition::getMinY);
+                offset = calculateOffset(pageElement, nextElements, PageElementPosition::getMinX);
                 break;
             default:
                     throw new IllegalStateException("Direction not supported : " + direction);
